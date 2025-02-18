@@ -10,9 +10,10 @@ namespace OnlineEditor.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly IRoomService _roomService;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, IRoomService roomService)
         {
             _logger = logger;
+            _roomService = roomService;
         }
 
         public IActionResult Index()
@@ -21,7 +22,7 @@ namespace OnlineEditor.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateRoom(string code)
+        public IActionResult CreateRoom()
         {
             string roomId = Guid.NewGuid().ToString();
             _roomService.AddRoom(roomId);
