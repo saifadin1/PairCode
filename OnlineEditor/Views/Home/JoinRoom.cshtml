@@ -1,0 +1,92 @@
+﻿@{
+    ViewData["Title"] = "Room";
+}
+
+<div class="room-container">
+    <div class="editor-section">
+        <h3>Live Code Editor</h3>
+        <div id="monaco-editor-container" style="height: 80vh;"></div>
+    </div>
+
+    <div class="sidebar">
+        <div class="room-info">
+            <button class="btn btn-secondary btn-sm" id="copyRoomId">Copy Room ID</button>
+            <small class="text-muted d-block mt-1">Share this ID with a friend to join the room.</small>
+            <input type="hidden" id="roomId" value="@ViewData["RoomId"]" />
+        </div>
+
+        <div class="video-chat">
+            <h3>Video Chat</h3>
+            <div class="video-box">
+                <video id="localVideo" autoplay muted></video>
+                <video id="remoteVideo" autoplay></video>
+            </div>
+            <div class="video-chat-buttons">
+                <button id="startCall" class="btn btn-success btn-sm">Start Call</button>
+                <button id="close" class="btn btn-danger btn-sm">Close Camera</button>
+                <button id="mute" class="btn btn-warning btn-sm">Mute</button>
+            </div>
+        </div>
+
+        <div class="chat-box">
+            <h3>Chat</h3>
+            <div id="chatMessages" class="chat-messages"></div>
+            <div class="chat-input">
+                <input type="text" id="chatInput" class="form-control" placeholder="Type a message..." />
+                <button id="sendMessage" class="btn btn-primary btn-sm">Send</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+       
+    <script src="~/lib/microsoft-signalr/signalr.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.34.1/min/vs/loader.js"></script>
+    <script>
+                  document.getElementById("copyRoomId").addEventListener("click", function () {
+            const roomId = document.getElementById("roomId").value;
+            navigator.clipboard.writeText(roomId).then(() => {
+                this.innerText = "Copied!";
+                setTimeout(() => { this.innerText = "Copy Room ID"; }, 2000);
+            });
+        });
+	const roomId = "@ViewData["roomId"]";
+	const username = "@ViewData["UserName"]";
+    let peerConnection;
+    let localStream;
+        const connection = new signalR.HubConnectionBuilder()
+                .withUrl("/roomHub")
+                .build();
+
+        function displayMessage(message) {
+            const newMessage = document.createElement("p");
+            const chatBox = document.getElementById("chatMessages");
+            newMessage.textContent = message;
+            chatBox.appendChild(newMessage);
+            chatBox.scrollTop = chatBox.scrollHeight;  // Scroll to the latest message
+        }
+
+            // Connect to the SignalR hub
+            connection.start().then(function () {
+                console.log("Connected to the chat room");
+
+                // Join the room
+                connection.invoke("JoinRoom", roomId, username)
+                    .catch(err => console.error(err.toString()));
+            }).catch(function (err) {
+                return console.error(err.toString());
+            });
+
+            // Notify that a user has joined the room
+                connection.on("UserJoined", (username) => {
+                    displayMessage(`${username} has joined the room.`);
+            });
+    </script>
+ 
+	<script src="~/js/videochat.js"></script>
+	<script src="~/js/editor.js"></script>
+	<script src="~/js/textchat.js"></script>
+        
+}
