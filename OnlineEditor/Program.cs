@@ -1,3 +1,4 @@
+using OnlineEditor.Hubs;
 using OnlineEditor.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -7,6 +8,7 @@ builder.Services.AddControllersWithViews();
 
 builder.Services.AddSingleton<IRoomService, RoomService>();
 
+builder.Services.AddSignalR();
 
 var app = builder.Build();
 
@@ -29,5 +31,7 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}")
     .WithStaticAssets();
+
+app.MapHub<RoomHub>("/roomHub");
 
 app.Run();

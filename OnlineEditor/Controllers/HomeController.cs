@@ -22,11 +22,11 @@ namespace OnlineEditor.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateRoom()
+        public IActionResult CreateRoom(string userName)
         {
             string roomId = Guid.NewGuid().ToString();
             _roomService.AddRoom(roomId);
-            return RedirectToAction(nameof(JoinRoom), new { id = roomId });
+            return RedirectToAction(nameof(JoinRoom), new { id = roomId , userName});
         }
         
         public IActionResult JoinRoom(string id, string userName)
