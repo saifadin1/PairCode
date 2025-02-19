@@ -5,6 +5,12 @@
     document.getElementById("chatInput").value = "";
 });
 
+document.getElementById("chatInput").addEventListener("keydown", function (event) {
+    if (event.key === 'Enter') { 
+        event.preventDefault();
+        document.getElementById("sendMessage").click();
+    }
+});
 
 connection.on("ReceiveMessage", (message, username) => {
     displayMessage(`${username}: ${message}`);
