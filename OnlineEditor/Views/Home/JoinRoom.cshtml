@@ -18,6 +18,7 @@
     <div class="sidebar">
         <div class="room-info">
             <button class="btn btn-secondary btn-sm" id="copyRoomId">Copy Room ID</button>
+            <span id="displayRoomId" class="badge bg-primary p-2"></span>
             <small class="text-muted d-block mt-1">Share this ID with a friend to join the room.</small>
             <input type="hidden" id="roomId" value="@ViewData["RoomId"]" />
         </div>
@@ -59,6 +60,14 @@
                 setTimeout(() => { this.innerText = "Copy Room ID"; }, 2000);
             });
         });
+
+                document.addEventListener("DOMContentLoaded", function () {
+            let roomId = document.getElementById("roomId").value;
+            document.getElementById("displayRoomId").textContent = roomId;
+
+            
+        });
+
 	const roomId = "@ViewData["roomId"]";
 	const username = "@ViewData["UserName"]";
     let peerConnection;

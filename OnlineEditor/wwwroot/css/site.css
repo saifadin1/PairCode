@@ -148,3 +148,8 @@ video {
         outline: none;
         border-color: #007bff;
     }
+
+.badge {
+    font-size: 14px;
+    border-radius: 5px;
+}
