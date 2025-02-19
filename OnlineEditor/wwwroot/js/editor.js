@@ -36,4 +36,9 @@ require(['vs/editor/editor.main'], function () {
             return console.error(err.toString());
         });
     });
+
+    document.getElementById("languageSelector").addEventListener("change", function () {
+        var newLanguage = this.value;
+        monaco.editor.setModelLanguage(editor.getModel(), newLanguage);
+    });
 });
